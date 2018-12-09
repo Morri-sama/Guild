@@ -9,10 +9,33 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/w3.css" />
     <link rel="stylesheet" href="~/css/guild.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 </head>
 <body>
     <nav class="w3-bar w3-black">
-        <a href="#" class="w3-button w3-bar-item">Guild</a>
+        <a asp-controller="Home" asp-action="Index" class="w3-button w3-bar-item">Guild</a>
+        <div class="w3-right w3-black">
+            <button class="w3-bar-item w3-button"><i class="far fa-bell"></i></button>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="w3-dropdown-hover">
+                    <button class="w3-button" style="height:38px">@User.Identity.Name <img src="https://www.w3schools.com/w3css/img_avatar2.png" class="w3-circle" style="height:25px;"> <i class="fa fa-caret-down"></i></button>
+                    <div class="w3-dropdown-content w3-bar-block w3-card-2 w3-dark-grey" style="right:0">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-controller="Admin" asp-action="Index" value="Панель администрирования"></a>
+                        }
+                        <form method="post" asp-controller="Account" asp-action="LogOff">
+                            <input class="w3-button w3-bar-item" type="submit" value="Выход" />
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="w3-button w3-bar-item">Вход</a>
+            }
+        </div>
     </nav>
     @RenderBody()
 </body>

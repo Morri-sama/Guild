@@ -6,6 +6,7 @@ using Guild.Data;
 using Guild.Models;
 using Guild.UI.Pagination;
 using Guild.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,6 +32,7 @@ namespace Guild.Controllers
 
         public async Task<IActionResult> Users(int? page, int? pageSize)
         {
+
             using(var context = new GuildContext())
             {
                 var users = from s in context.AspNetUsers
