@@ -1,27 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Guild.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Guild.Models
+namespace Guild.ViewModels
 {
-    public class User : IdentityUser
+    public class UserViewModel
     {
+        public string UserName { get; set; }
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public ICollection<Order> Orders { get; set; }
         public int? GuildId { get; set; }
-        
-
-        [ForeignKey("GuildId")]
-        public virtual Guild Guilds { get; set; }
-
-        public User()
-        {
-
-        }
+        public IList<string> Role { get; set; }                      
     }
 }

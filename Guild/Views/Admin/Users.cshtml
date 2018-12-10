@@ -1,4 +1,4 @@
-﻿@model Guild.UI.Pagination.PaginatedList<Guild.Models.User>
+﻿@model List<Guild.ViewModels.UserViewModel>
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -6,8 +6,6 @@
     ViewData["Title"] = "Users";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 
-    var prevDisabled = !Model.HasPreviousPage ? "hidden" : "w3-show-block";
-    var nextDisabled = !Model.HasNextPage ? "hidden" : "w3-show-block";
 }
 
 <h2>Users</h2>
@@ -15,17 +13,34 @@
 @foreach (var user in Model)
 {
     <div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
-        <a asp-action="Details" asp-route-id="@user.Id" class="w3-button w3-right">Подробнее</a>
+        <a asp-action="EditUser" asp-route-userid="@user.Id" class="w3-button w3-right">Редактировать</a>
         <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
-            <i class="fas fa-tablet-alt w3-display-middle"></i>
+            <img class="w3-display-middle" src="~/img/user.png"/>
         </div>
-        <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">@user.UserName <i class="far fa-circle w3-small" style="color:lightgreen"></i></h4>
+        <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">@user.UserName</h4>
         <div>
             <div class="w3-cell-row">
                 <table class="w3-half w3-table w3-responsive">
                     <tr>
                         <th>Фамилия</th>
                         <td>@user.LastName</td>
+                    </tr>
+                    <tr>
+                        <th>Имя</th>
+                        <td>@user.FirstName</td>
+                    </tr>
+                    <tr>
+                        <th>Отчество</th>
+                        <td>@user.MiddleName</td>
+                    </tr>
+                </table>
+                <table class="w3-half w3-table w3-responsive">
+                    <tr>
+                        <th>Уровень доступа</th>
+                        @foreach (var x in user.Role)
+                        {
+                            <td>@x</td>
+                        }
                     </tr>
                     <tr>
                         <th>Имя</th>

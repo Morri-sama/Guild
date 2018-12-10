@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace Guild.Models
 {
-    public class Guild
+    public class Order
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
-        public string Name { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public string ProductId { get; set; }
+        public string Text1 { get; set; }
+        public string Text2 { get; set; }
+        public string AdditionalText1 { get; set; }
+        public string AdditionalText2 { get; set; }
 
+        public User User { get; set; }
     }
 }

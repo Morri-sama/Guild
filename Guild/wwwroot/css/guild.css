@@ -1,4 +1,25 @@
-﻿body {
+﻿.shadow-border {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.sidebar {
+    width: 250px;
+    background-color:black !important;
+}
+
+    .sidebar > ul > li {
+        list-style-type: none;
+        padding-bottom: 16px;
+    }
+
+    .sidebar ~ #main {
+        margin-left: 250px;
+    }
+
+    .sidebar > ul > li > a > span {
+        display: inline-block;
+    }
+body {
     background-color: #f1f1f1;
 }
 
@@ -32,7 +53,7 @@
             position: absolute;
             font-family: Arial;
             top: 12px;
-            left: 62px;
+            left: 0px;
             transition: all .1s ease-in-out;
             -moz-transition: all .1s ease-in-out;
         }
@@ -51,7 +72,7 @@
                     opacity: 1;
                     font-size: 14px;
                     top: -20px;
-                    left: 58px;
+                    left: 0px;
                 }
 
             .form > div > input:valid {
@@ -65,7 +86,7 @@
                     opacity: 0.5;
                     font-size: 12px;
                     top: -20px;
-                    left: 58px;
+                    left: 0px;
                 }
 
             .form > div > input:invalid:not(:focus):not(:placeholder-shown) {
@@ -77,7 +98,7 @@
                     font-size: 12px;
                     color: red;
                     top: -20px;
-                    left: 58px;
+                    left: 0px;
                 }
 
             .form > div > input:invalid:focus:not(:placeholder-shown) ~ .requirements {

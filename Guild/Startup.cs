@@ -19,13 +19,22 @@ namespace Guild
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //var connection = @"Server=(localdb)\mssqllocaldb;Database=Guild;Trusted_Connection=True;MultipleActiveResultSets=true";
-            var connection = @"Data Source=guilddbserver.database.windows.net;Initial Catalog=Guild;User ID=morri;Password=BeNDeR1488;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=Guild2;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //var connection = @"Data Source=guilddbserver.database.windows.net;Initial Catalog=Guild;User ID=morri;Password=BeNDeR1488;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connection));
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
 
             services.AddMvc();
         }
@@ -36,6 +45,11 @@ namespace Guild
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var client = new GuildContext())
+            {
+                client.Database.EnsureCreated();
             }
 
             app.UseHttpsRedirection();

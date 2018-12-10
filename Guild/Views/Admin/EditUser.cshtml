@@ -2,48 +2,49 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model Guild.ViewModels.CreateUserViewModel
 @{
-    ViewData["Title"] = "RegisterUser";
+    ViewData["Title"] = "EditUser";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<h2>EditUser</h2>
+
 <div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
-    <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center"><img src="~/img/user.png" class="w3-display-middle"/></div>
+    <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center"><img src="~/img/user.png" class="w3-display-middle" /></div>
     <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">Добавить пользователя</h4>
-    <form method="post" asp-controller="Admin" asp-action="CreateUser" class="form w3-margin">
+    <form method="post" asp-controller="Admin" asp-action="EditUser" class="form w3-margin">
         <div asp-validation-summary="ModelOnly"></div>
         <div class="input-container">
-            <input asp-for="UserName" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="UserName" class="w3-input input-field"  placeholder=" " />
             <label asp-for="UserName"></label>
             <span asp-validation-for="UserName"></span>
         </div>
         <div class="input-container">
-            <input asp-for="FirstName" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="FirstName" class="w3-input input-field"  placeholder=" " />
             <label asp-for="FirstName"></label>
             <span asp-validation-for="FirstName"></span>
         </div>
         <div class="input-container">
-            <input asp-for="MiddleName" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="MiddleName" class="w3-input input-field"  placeholder=" " />
             <label asp-for="MiddleName"></label>
             <span asp-validation-for="MiddleName"></span>
         </div>
         <div class="input-container">
-            <input asp-for="LastName" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="LastName" class="w3-input input-field"  placeholder=" " />
             <label asp-for="LastName"></label>
             <span asp-validation-for="LastName"></span>
         </div>
         <div class="input-container">
-            <input asp-for="Password" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="Password" class="w3-input input-field"  placeholder=" " />
             <label asp-for="Password"></label>
             <span asp-validation-for="Password"></span>
         </div>
         <div class="input-container">
-            <input asp-for="PasswordConfirm" class="w3-input input-field" required placeholder=" " />
+            <input asp-for="PasswordConfirm" class="w3-input input-field" placeholder=" " />
             <label asp-for="PasswordConfirm"></label>
             <span asp-validation-for="PasswordConfirm"></span>
         </div>
         <div class="input-container">
-            <select asp-for="GuildId" asp-items="Model.Guilds" class="w3-input input-field">
-            </select>
+            <select asp-for="GuildId" asp-items="Model.Guilds" class="w3-input input-field"></select>
             <span asp-validation-for="Guilds"></span>
         </div>
         <input type="submit" class="w3-button w3-right w3-green w3-text-white" value="Добавить пользователя" />

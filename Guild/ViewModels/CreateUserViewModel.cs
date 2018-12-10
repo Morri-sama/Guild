@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,5 +42,14 @@ namespace Guild.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Подтвердить пароль")]
         public string PasswordConfirm { get; set; }
+
+        public List<IdentityRole> AllRoles { get; set; }
+        public IList<string> UserRoles { get; set; }
+
+        public CreateUserViewModel()
+        {
+            AllRoles = new List<IdentityRole>();
+            UserRoles = new List<string>();
+        }
     }
 }
