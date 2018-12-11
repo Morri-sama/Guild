@@ -33,7 +33,6 @@
     </nav>
     <main id="main" class="w3-animate-right">
         <button id="sidebarToggle" onclick="sbToggle()" class="w3-button w3-circle w3-bar-item"><i class="fas fa-ellipsis-v"></i></button>
-        @ViewData["Title"]
         <div class="w3-right">
             <button class="w3-bar-item w3-button"><i class="far fa-bell"></i></button>
             <div class="w3-dropdown-hover">
@@ -44,7 +43,9 @@
                 </div>
             </div>
         </div>
+        <div class="w3-margin" style="margin-top:50px !important;">
         @RenderBody()
+        </div>
     </main>
 </body>
 </html>

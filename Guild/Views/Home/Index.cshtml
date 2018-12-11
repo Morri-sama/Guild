@@ -1,9 +1,21 @@
-﻿
+﻿@model List<Guild.Models.Order>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
-
+@foreach (var x in Model)
+{
+    <div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
+        <a asp-action="Details" asp-route-orderId="@x.Id" class="w3-button w3-right">Подробнее</a>
+        <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
+            <img class="w3-display-middle" src="~/img/shopping-bag.png"/>
+        </div>
+        <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">@x.ProductId</h4>
+        <p>@x.Text1</p>
+        <p>@x.Text2</p>
+    </div>
+}

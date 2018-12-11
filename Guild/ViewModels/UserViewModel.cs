@@ -15,6 +15,6 @@ namespace Guild.ViewModels
         public string LastName { get; set; }
         public ICollection<Order> Orders { get; set; }
         public int? GuildId { get; set; }
-        public IList<string> Role { get; set; }                      
+        public bool IsAdmin { get; set; }                  
     }
 }

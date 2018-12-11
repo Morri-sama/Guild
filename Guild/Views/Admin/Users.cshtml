@@ -8,7 +8,10 @@
 
 }
 
-<h2>Users</h2>
+<div class="w3-padding">
+    <h2>Список пользователей</h2>
+</div>
+
 
 @foreach (var user in Model)
 {
@@ -36,20 +39,10 @@
                 </table>
                 <table class="w3-half w3-table w3-responsive">
                     <tr>
-                        <th>Уровень доступа</th>
-                        @foreach (var x in user.Role)
-                        {
-                            <td>@x</td>
-                        }
+                        <th>Является администратором</th>
+                        <td><input asp-for="@user.IsAdmin" disabled></td>
                     </tr>
-                    <tr>
-                        <th>Имя</th>
-                        <td>@user.FirstName</td>
-                    </tr>
-                    <tr>
-                        <th>Отчество</th>
-                        <td>@user.MiddleName</td>
-                    </tr>
+
                 </table>
             </div>
 

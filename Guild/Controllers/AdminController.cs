@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Guild.Controllers
 {
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -39,14 +39,14 @@ namespace Guild.Controllers
             List<UserViewModel> list = new List<UserViewModel>();
             foreach (var user in users)
             {
-                list.Add(new UserViewModel { FirstName = user.FirstName, LastName = user.LastName, MiddleName = user.MiddleName, Role = await _userManager.GetRolesAsync(user), GuildId=user.GuildId, Id=user.Id, UserName=user.UserName });
+                list.Add(new UserViewModel { FirstName = user.FirstName, LastName = user.LastName, MiddleName = user.MiddleName, IsAdmin = await _userManager.IsInRoleAsync(user, "admin"), GuildId = user.GuildId, Id = user.Id, UserName = user.UserName });
             }
 
-            using(var context = new GuildContext())
+            using (var context = new GuildContext())
             {
                 return View(list);
             }
-                
+
         }
 
         [HttpGet]
@@ -72,7 +72,7 @@ namespace Guild.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { FirstName = model.FirstName, MiddleName = model.MiddleName, LastName = model.LastName, GuildId = model.GuildId, UserName=model.UserName };
+                User user = new User { FirstName = model.FirstName, MiddleName = model.MiddleName, LastName = model.LastName, GuildId = model.GuildId, UserName = model.UserName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -106,20 +106,22 @@ namespace Guild.Controllers
             User user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                
+
 
                 // получем список ролей пользователя
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var allRoles = _roleManager.Roles.ToList();
-                CreateUserViewModel model = new CreateUserViewModel()
+                EditUserViewModel model = new EditUserViewModel()
                 {
+                    UserId = userId,
                     FirstName = user.FirstName,
                     MiddleName = user.MiddleName,
                     LastName = user.LastName,
                     UserName = user.UserName,
-                    UserRoles = userRoles,
-                    AllRoles = allRoles
+                    GuildId = user.GuildId ?? default(int),
+                    IsAdmin = await _userManager.IsInRoleAsync(user, "admin")
                 };
+
 
                 model.Guilds = new List<SelectListItem>();
 
@@ -138,6 +140,50 @@ namespace Guild.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(string userId, EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    user.FirstName = model.FirstName;
+                    user.MiddleName = model.MiddleName;
+                    user.LastName = model.LastName;
+                    user.UserName = model.UserName;
+                    user.GuildId = model.GuildId;
+
+                    var result = await _userManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        if (model.IsAdmin != await _userManager.IsInRoleAsync(user, "admin"))
+                        {
+                            if (model.IsAdmin)
+                            {
+                                await _userManager.AddToRoleAsync(user, "admin");
+                            }
+                            else
+                            {
+                                await _userManager.RemoveFromRoleAsync(user, "admin");
+                            }
+                        }
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+            return View(model);
         }
 
         [HttpGet]

@@ -10,12 +10,19 @@ namespace Guild.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
+        public string UserId { get; set; }
         public string ProductId { get; set; }
         public string Text1 { get; set; }
         public string Text2 { get; set; }
         public string AdditionalText1 { get; set; }
         public string AdditionalText2 { get; set; }
 
+        [ForeignKey("UserId")]
         public User User { get; set; }
+
+        public Order()
+        {
+
+        }
     }
 }
