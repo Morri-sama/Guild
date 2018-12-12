@@ -10,16 +10,19 @@ namespace Guild.Data
 {
     public class GuildContext:DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public GuildContext(DbContextOptions<GuildContext> options) : base(options)
         {
-            //var connection = @"Server = (localdb)\mssqllocaldb; Database = Guild2; Trusted_Connection = True; ConnectRetryCount = 0";
-            
-            var connection = @"Data Source=guilddbserver.database.windows.net;Initial Catalog=Guild;User ID=morri;Password=BeNDeR1488;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            optionsBuilder.UseSqlServer(connection);
+            Database.EnsureCreated();
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Models.Guild>().ToTable("Guilds", "dbo");
+            builder.Entity<Order>().ToTable("Orders", "dbo");
+        }
 
-        public DbSet<Models.Guild> Guild { get; set; }
-        public DbSet<Order> Order { get; set; }
+        public DbSet<Models.Guild> Guilds { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

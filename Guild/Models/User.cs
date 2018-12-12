@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Guild.Models
 {
+    [Table("Users")]
     public class User : IdentityUser
     {
         public string FirstName { get; set; }
@@ -17,7 +18,7 @@ namespace Guild.Models
         
 
         [ForeignKey("GuildId")]
-        public virtual Guild Guilds { get; set; }
+        public virtual Guild Guild { get; set; }
 
         public User()
         {

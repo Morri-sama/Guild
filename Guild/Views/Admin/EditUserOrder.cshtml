@@ -1,0 +1,44 @@
+﻿@model Guild.Models.Order
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "EditUserOrder";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
+    <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
+        <img class="w3-display-middle" src="~/img/shopping-bag.png" />
+    </div>
+    <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">Заказ @Model.Id</h4>
+    <form method="post" asp-action="EditUserOrder">
+        <input asp-for="UserId" hidden/>
+        <input asp-for="Id" hidden/>
+        <table class="w3-table w3-responsive">
+            <tr>
+                <th>Продукт</th>
+                <td><input asp-for="ProductId" class="w3-input"></td>
+            </tr>
+            <tr>
+                <th>Текст 1</th>
+                <td><textarea asp-for="Text1" cols="40" rows="5" class="w3-input" style="width:100%;"></textarea></td>
+            </tr>
+            <tr>
+                <th>Текст 2</th>
+                <td><textarea asp-for="Text2" cols="40" rows="5" class="w3-input" style="width:100%;"></textarea></td>
+            </tr>
+            <tr>
+                <th>Дополнительный текст 1</th>
+                <td><textarea asp-for="AdditionalText1" cols="40" rows="5" class="w3-input" style="width:100%;"></textarea></td>
+            </tr>
+            <tr>
+                <th>Дополнительный текст 2</th>
+                <td><textarea asp-for="AdditionalText2" cols="40" rows="5" class="w3-input" style="width:100%;"></textarea></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td><button type="submit" class="w3-button w3-green w3-right">Сохранить изменения</button></td>
+            </tr>
+        </table>
+    </form>
+</div>

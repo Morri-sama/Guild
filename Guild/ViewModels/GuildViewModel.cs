@@ -7,7 +7,7 @@ namespace Guild.ViewModels
 {
     public class GuildViewModel
     {
-        public int GuildId { get; }
+        public int GuildId { get; set; }
         public string Name { get; set; }
     }
 }

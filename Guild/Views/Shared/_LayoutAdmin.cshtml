@@ -16,17 +16,12 @@
         <ul class="w3-bar-item">
             <li>
                 <a asp-action="Users" asp-controller="Admin" class="w3-bar-item w3-button w3-left-align w3-round w3-hover-dark-gray">
-                    Список пользователей
+                    Пользователи
                 </a>
             </li>
             <li>
-                <a asp-action="CreateUser" asp-controller="Admin" class="w3-bar-item w3-button w3-left-align w3-round w3-hover-dark-gray">
-                    Добавить пользователя
-                </a>
-            </li>
-            <li>
-                <a asp-action="CreateGuild" asp-controller="Admin" class="w3-bar-item w3-button w3-left-align w3-round w3-hover-dark-gray">
-                    Добавить цех
+                <a asp-action="Guilds" asp-controller="Admin" class="w3-bar-item w3-button w3-left-align w3-round w3-hover-dark-gray">
+                    Цехи
                 </a>
             </li>
         </ul>
@@ -38,8 +33,9 @@
             <div class="w3-dropdown-hover">
                 <button class="w3-button" style="height:38px">@User.Identity.Name<img src="https://www.w3schools.com/w3css/img_avatar2.png" class="w3-circle" style="height:25px;">&nbsp;<i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-bar-block w3-card-2 w3-dark-grey" style="right:0">
-                    <a href="@Url.Action("Edit", "Users", null)" class="w3-bar-item w3-button">Редактировать</a>
-                    <a href="#" class="w3-bar-item w3-button">Выйти</a>
+                    <form method="post" asp-controller="Admin" asp-action="LogOff">
+                        <input class="w3-button w3-bar-item" type="submit" value="Выход" />
+                    </form>
                 </div>
             </div>
         </div>

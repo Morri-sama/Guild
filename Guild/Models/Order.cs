@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Guild.Models
 {
+    [Table("Orders")]
     public class Order
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string ProductId { get; set; }
         public string Text1 { get; set; }

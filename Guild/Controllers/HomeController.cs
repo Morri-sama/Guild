@@ -19,17 +19,17 @@ namespace Guild.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly GuildContext _context;
 
-        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager, GuildContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _context = new GuildContext();
+            _context = context;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var kkms = _context.Order.Where(x => x.UserId == _userManager.GetUserId(HttpContext.User)).ToList();
+            var kkms = _context.Orders.Where(x => x.UserId == _userManager.GetUserId(HttpContext.User)).ToList();
 
             return View(kkms);
         }
@@ -37,7 +37,7 @@ namespace Guild.Controllers
         [HttpGet]
         public IActionResult Details(int orderId)
         {
-            var result = _context.Order.Where(x => x.Id == orderId && x.UserId == _userManager.GetUserId(HttpContext.User)).FirstOrDefault();
+            var result = _context.Orders.Where(x => x.Id == orderId && x.UserId == _userManager.GetUserId(HttpContext.User)).FirstOrDefault();
 
             if (result != null)
             {

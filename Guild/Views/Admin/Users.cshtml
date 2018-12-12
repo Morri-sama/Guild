@@ -8,44 +8,59 @@
 
 }
 
-<div class="w3-padding">
-    <h2>Список пользователей</h2>
-</div>
-
-
-@foreach (var user in Model)
-{
-    <div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
-        <a asp-action="EditUser" asp-route-userid="@user.Id" class="w3-button w3-right">Редактировать</a>
-        <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
-            <img class="w3-display-middle" src="~/img/user.png"/>
-        </div>
-        <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">@user.UserName</h4>
-        <div>
-            <div class="w3-cell-row">
-                <table class="w3-half w3-table w3-responsive">
-                    <tr>
-                        <th>Фамилия</th>
-                        <td>@user.LastName</td>
-                    </tr>
-                    <tr>
-                        <th>Имя</th>
-                        <td>@user.FirstName</td>
-                    </tr>
-                    <tr>
-                        <th>Отчество</th>
-                        <td>@user.MiddleName</td>
-                    </tr>
-                </table>
-                <table class="w3-half w3-table w3-responsive">
-                    <tr>
-                        <th>Является администратором</th>
-                        <td><input asp-for="@user.IsAdmin" disabled></td>
-                    </tr>
-
-                </table>
-            </div>
-
-        </div>
+<div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
+    <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
+        <img class="w3-display-middle" src="~/img/user.png" />
     </div>
-}
+    <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">Список пользователей</h4>
+    <a asp-action="CreateUser" class="w3-button w3-green w3-right">
+        Добавить пользователя
+    </a>
+    <div>
+        <div class="w3-cell-row">
+            <table class="w3-table w3-col w3-border-top w3-border-blue">
+                <tr class="w3-small w3-border-bottom">
+                    <th>Id пользователя</th>
+                    <th>Имя пользователя</th>
+                    <th>Фамилия Имя Отчество</th>
+                    <th>Цех</th>
+                    <th>Администратор</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var user in Model)
+                {
+                <tr class="w3-hover-dark-grey">
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.LastName @user.FirstName @user.MiddleName</td>
+                    <td>
+                        @if (!String.IsNullOrEmpty(user.GuildName))
+                        {
+                            <span>@user.GuildName</span>
+                        }
+                    </td>
+                    <td><input asp-for="@user.IsAdmin" class="w3-check" disabled></td>
+                    <td>
+                        <a asp-action="UserOrders" asp-route-userId="@user.Id" class="w3-button w3-purple">
+                            Заказы
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="EditUser" asp-route-userId="@user.Id" class="w3-button w3-blue">
+                            Редактировать
+                        </a>
+                    </td>
+                    <td>
+                        <form method="post" asp-action="DeleteUser" asp-route-userId="@user.Id">
+                            <button type="submit" class="w3-button w3-red">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+</div>

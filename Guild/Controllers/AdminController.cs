@@ -20,32 +20,51 @@ namespace Guild.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly GuildContext _context;
 
-        public AdminController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, GuildContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            Guild.Models.Guild guild = _context.Guilds.Include(t => t.Users).FirstOrDefault();
+
+            return View(guild);
         }
 
         public async Task<IActionResult> Users(int? page, int? pageSize)
         {
-            var users = _userManager.Users;
+            var users = _userManager.Users.Include(x => x.Guild);
             List<UserViewModel> list = new List<UserViewModel>();
             foreach (var user in users)
             {
-                list.Add(new UserViewModel { FirstName = user.FirstName, LastName = user.LastName, MiddleName = user.MiddleName, IsAdmin = await _userManager.IsInRoleAsync(user, "admin"), GuildId = user.GuildId, Id = user.Id, UserName = user.UserName });
+                var x = new UserViewModel();
+                x.FirstName = user.FirstName;
+                x.LastName = user.LastName;
+                x.MiddleName = user.MiddleName;
+                x.IsAdmin = await _userManager.IsInRoleAsync(user, "admin");
+                x.GuildId = user.GuildId;
+                x.Id = user.Id;
+                x.UserName = user.UserName;
+                if (user.GuildId != null)
+                {
+                    x.GuildName = user.Guild.Name;
+                }
+                else
+                {
+                    x.GuildName = "Не состоит в цехе";
+                }
+
+
+                list.Add(x);
             }
 
-            using (var context = new GuildContext())
-            {
-                return View(list);
-            }
+            return View(list);
 
         }
 
@@ -55,13 +74,11 @@ namespace Guild.Controllers
             var vm = new CreateUserViewModel();
             vm.Guilds = new List<SelectListItem>();
 
-            using (var context = new GuildContext())
+            foreach (Models.Guild x in _context.Guilds)
             {
-                foreach (Models.Guild x in context.Guild)
-                {
-                    vm.Guilds.Add(new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
-                }
+                vm.Guilds.Add(new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
             }
+
 
 
             return View(vm);
@@ -72,7 +89,7 @@ namespace Guild.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { FirstName = model.FirstName, MiddleName = model.MiddleName, LastName = model.LastName, GuildId = model.GuildId, UserName = model.UserName };
+                User user = new User { FirstName = model.FirstName, MiddleName = model.MiddleName, LastName = model.LastName, GuildId = model.GuildId??default(int), UserName = model.UserName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -87,15 +104,31 @@ namespace Guild.Controllers
                 }
             }
 
-            using (var db = new GuildContext())
+            foreach (Models.Guild x in _context.Guilds)
             {
-                foreach (Models.Guild x in db.Guild)
-                {
-                    model.Guilds.Add(new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
-                }
+                model.Guilds.Add(new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
             }
 
+
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUser(string userId)
+        {
+            if (_userManager.GetUserId(HttpContext.User) == userId)
+            {
+                return NotFound();
+            }
+            else
+            {
+                User user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
+                {
+                    IdentityResult result = await _userManager.DeleteAsync(user);
+                }
+                return RedirectToAction("Users", "Admin");
+            }
         }
 
 
@@ -125,16 +158,15 @@ namespace Guild.Controllers
 
                 model.Guilds = new List<SelectListItem>();
 
-                using (var context = new GuildContext())
+
+                foreach (Models.Guild x in _context.Guilds)
                 {
-                    foreach (Models.Guild x in context.Guild)
-                    {
-                        SelectListItem xd = new SelectListItem();
-                        xd.Text = x.Name;
-                        xd.Value = x.Id.ToString();
-                        model.Guilds.Add(xd);
-                    }
+                    SelectListItem xd = new SelectListItem();
+                    xd.Text = x.Name;
+                    xd.Value = x.Id.ToString();
+                    model.Guilds.Add(xd);
                 }
+
 
                 return View(model);
             }
@@ -199,16 +231,101 @@ namespace Guild.Controllers
             {
                 Guild.Models.Guild guild = new Models.Guild() { Name = model.Name };
 
-                using (var db = new GuildContext())
+
+                await _context.AddAsync(guild);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Admin");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditGuild(int guildId)
+        {
+            var guild = _context.Guilds.Where(x => x.Id == guildId).FirstOrDefault();
+            var vm = new GuildViewModel()
+            {
+                Name = guild.Name,
+                GuildId = guild.Id
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult EditGuild(GuildViewModel vm)
+        {
+            var guild = _context.Guilds.Where(x => x.Id == vm.GuildId).FirstOrDefault();
+            guild.Name = vm.Name;
+            _context.SaveChanges();
+            return RedirectToAction("Guilds", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult Guilds()
+        {
+            var guilds = _context.Guilds.Include(x => x.Users).ToList();
+
+            return View(guilds);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteGuild(int guildId)
+        {
+            var guild = _context.Guilds.Include(x => x.Users).Where(x => x.Id == guildId).FirstOrDefault();
+            try
+            {
+                if (guild.Users != null)
                 {
-                    await db.AddAsync(guild);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Index", "Admin");
+                    foreach (var x in guild.Users)
+                    {
+                        x.GuildId = null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
 
             }
 
-            return View(model);
+
+
+            _context.Remove(guild);
+            _context.SaveChanges();
+
+            return RedirectToAction("Guilds", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult UserOrders(string userId)
+        {
+            var orders = _context.Orders.Where(x => x.UserId == userId).ToList();
+
+            return View(orders);
+        }
+
+        [HttpGet]
+        public IActionResult EditUserOrder(int orderId)
+        {
+            var order = _context.Orders.Where(x => x.Id == orderId).FirstOrDefault();
+
+            return View(order);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUserOrder(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Guild.ViewModels
 
         [Required]
         [Display(Name = "Цех")]
-        public int GuildId { get; set; }
+        public int? GuildId { get; set; }
 
         public List<SelectListItem> Guilds { get; set; }
 

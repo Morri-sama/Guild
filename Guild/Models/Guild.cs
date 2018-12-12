@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Guild.Models
 {
+    [Table("Guilds")]
     public class Guild
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

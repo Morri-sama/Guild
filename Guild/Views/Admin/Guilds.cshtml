@@ -1,9 +1,70 @@
-﻿
+﻿@model List<Guild.Models.Guild>
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Guilds";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Guilds</h2>
+<div class="w3-padding  w3-container w3-white w3-margin w3-round" style="overflow:visible; margin-bottom:50px!important;">
+    <div class="w3-card-2 w3-blue w3-round w3-display-container w3-show-inline-block" style="width:50px; height:50px; margin-top:-25px; text-align:center">
+        <img class="w3-display-middle" src="~/img/assembly.png" />
+    </div>
+    <h4 class="w3-show-inline-block" style="position:relative; top:-12px; padding-left:5px;">Список цехов</h4>
+    <a asp-action="CreateGuild" asp-controller="Admin" class=" w3-button w3-green w3-right">
+        Добавить цех
+    </a>
+    <div>
+        <div class="w3-cell-row">
+            <table class="w3-table w3-col w3-border-top w3-border-blue">
+                <tr class="w3-small w3-border-bottom">
+                    <th>Id цеха</th>
+                    <th>Наименование цеха</th>
+                    <th>Пользователи</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var x in Model)
+                {
+                    <tr class="w3-hover-dark-grey">
+                        <td>@x.Id</td>
+                        <td>@x.Name</td>
+                        <td>
+                            @if (x.Users.Count >= 1)
+                            {
+                                <div class="w3-dropdown-hover">
+                                    <button class="w3-button">Пользователей: @x.Users.Count</button>
+
+                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                        @foreach (var u in x.Users)
+                                        {
+                                            <a asp-action="EditUser" asp-route-userid="@u.Id" class="w3-bar-item w3-button">@u.UserName (@u.LastName @u.FirstName @u.MiddleName)</a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <span>Пользователей: 0</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="EditGuild" asp-route-guildId="@x.Id" class="w3-button w3-blue">
+                                Редактировать
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="DeleteGuild" asp-route-guildId="@x.Id" class="w3-button w3-red">
+                                Удалить
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+</div>
 
