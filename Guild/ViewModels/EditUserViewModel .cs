@@ -30,15 +30,6 @@ namespace Guild.ViewModels
 
         public List<SelectListItem> Guilds { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
-        public string Password { get; set; }
-
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
-        public string PasswordConfirm { get; set; }
-
         [Display(Name = "Администратор")]
         public bool IsAdmin { get; set; }
 
